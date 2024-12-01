@@ -1,5 +1,6 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import ProductController from "../../data/mongo/managers/products.controller.js";
+import passportCb from "../../middlewares/passportCb.mid.js";
 
 const controller = new ProductController();
 
@@ -9,11 +10,11 @@ class ProductsApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.read("/", getProducts);
-    this.read("/:pid", getProduct);
-    this.create("/", createProduct);
-    this.update("/:pid", updateProduct);
-    this.destroy("/:pid", deleteProduct);
+    this.read("/", ["USER", "ADMIN"], getProducts);
+    this.read("/:pid", ["USER", "ADMIN"], getProduct);
+    this.create("/", ["ADMIN"], createProduct);
+    this.update("/:pid", ["ADMIN"], updateProduct);
+    this.destroy("/:pid", ["ADMIN"], deleteProduct);
   };
 }
 

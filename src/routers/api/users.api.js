@@ -1,5 +1,6 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import UsersController from "../../data/mongo/managers/users.controller.js";
+import passportCb from "../../middlewares/passportCb.mid.js";
 
 const userController = new UsersController();
 
@@ -9,10 +10,10 @@ class UsersApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", createUser);
-    this.read("/", readUsers);
-    this.update("/:id", updateUser);
-    this.destroy("/:id", destroyUser);
+    this.create("/", ["USER", "ADMIN"], createUser);
+    this.read("/", ["USER", "ADMIN"], readUsers);
+    this.update("/:id", ["USER", "ADMIN"], updateUser);
+    this.destroy("/:id", ["USER", "ADMIN"], destroyUser);
   };
 }
 

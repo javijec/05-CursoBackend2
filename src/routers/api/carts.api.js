@@ -1,5 +1,6 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import CartController from "../../data/mongo/managers/carts.controller.js";
+import passportCb from "../../middlewares/passportCb.mid.js";
 
 const controller = new CartController();
 class CartsApiRouter extends CustomRouter {
@@ -8,14 +9,14 @@ class CartsApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", createCart);
-    this.read("/", getCarts);
-    this.read("/:cid", getCart);
-    this.create("/:cid/product/:pid", addProductToCart);
-    this.destroy("/:cid/product/:pid", deleteProductFromCart);
-    this.update("/:cid", updateCart);
-    this.update("/:cid/products/:pid", updateProductQuantity);
-    this.destroy("/:cid", deleteCart);
+    this.create("/", ["USER", "ADMIN"], createCart);
+    this.read("/", ["ADMIN"], getCarts);
+    this.read("/:cid", ["USER", "ADMIN"], getCart);
+    this.create("/:cid/product/:pid", ["USER", "ADMIN"], addProductToCart);
+    this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], deleteProductFromCart);
+    this.update("/:cid", ["USER", "ADMIN"], updateCart);
+    this.update("/:cid/products/:pid", ["USER", "ADMIN"], updateProductQuantity);
+    this.destroy("/:cid", ["USER", "ADMIN"], deleteCart);
   };
 }
 const cartsApiRouter = new CartsApiRouter();

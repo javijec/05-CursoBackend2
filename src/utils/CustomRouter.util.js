@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { verifyTokenUtil } from "./token.util.js";
 
 class CustomRouter {
   constructor() {
@@ -22,12 +23,31 @@ class CustomRouter {
     res.json404 = () => res.status(404).json({ error: "Not found!" });
     return next();
   };
+  policies = (policies) => async (req, res, next) => {
+    try {
+      if (policies.includes("PUBLIC")) return next();
+      const token = req?.cookies?.token;
+      if (!token) return res.json401();
+      const data = verifyTokenUtil(token);
+      const { role, user_id } = data;
+      if (!role || !user_id) return res.json401();
+      if ((policies.includes("USER") && role === "USER") || (policies.includes("ADMIN") && role === "ADMIN")) {
+        const user = await readById(user_id);
+        if (!user) return res.json401();
+        req.user = user;
+        return next();
+      }
+      return res.json403();
+    } catch (error) {
+      return res.json400(error.message);
+    }
+  };
 
-  create = (path, ...cbs) => this._router.post(path, this.responses, this._applyCallbacks(cbs));
-  read = (path, ...cbs) => this._router.get(path, this.responses, this._applyCallbacks(cbs));
-  update = (path, ...cbs) => this._router.put(path, this.responses, this._applyCallbacks(cbs));
-  destroy = (path, ...cbs) => this._router.delete(path, this.responses, this._applyCallbacks(cbs));
-  use = (path, ...cbs) => this._router.use(path, this.responses, this._applyCallbacks(cbs));
+  create = (path, policies, ...cbs) => this._router.post(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
+  read = (path, policies, ...cbs) => this._router.get(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
+  update = (path, policies, ...cbs) => this._router.put(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
+  destroy = (path, policies, ...cbs) => this._router.delete(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
+  use = (path, policies, ...cbs) => this._router.use(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
 }
 
 export default CustomRouter;

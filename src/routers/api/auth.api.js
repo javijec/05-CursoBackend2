@@ -7,10 +7,10 @@ class AuthApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/register", passportCb("register"), register);
-    this.create("/login", passportCb("login"), login);
-    this.create("/signout", passportCb("signout"), signout);
-    this.create("/online", passportCb("online"), online);
+    this.create("/register", ["PUBLIC"], passportCb("register"), register);
+    this.create("/login", ["PUBLIC"], passportCb("login"), login);
+    this.create("/signout", ["USER", "ADMIN"], passportCb("signout"), signout);
+    this.create("/online", ["USER", "ADMIN"], passportCb("online"), online);
   };
 }
 
