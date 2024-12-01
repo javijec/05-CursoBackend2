@@ -1,77 +1,72 @@
-import { Router } from "express";
+import CustomRouter from "../../utils/CustomRouter.util.js";
 import ProductController from "../../data/mongo/managers/products.controller.js";
 
-const productsApiRouter = Router();
 const controller = new ProductController();
 
-//get all products
-productsApiRouter.get("/", async (req, res) => {
-  try {
-    const { limit, page, category, stock, sort } = req.query;
-    console.log(stock);
-    const products = await controller.getProducts(limit, page, category, stock, sort);
-    res.status(200).send({ status: "success", data: products });
-  } catch (error) {
-    return next(error);
+class ProductsApiRouter extends CustomRouter {
+  constructor() {
+    super();
+    this.init();
   }
-});
+  init = () => {
+    this.read("/", getProducts);
+    this.read("/:pid", getProduct);
+    this.create("/", createProduct);
+    this.update("/:pid", updateProduct);
+    this.destroy("/:pid", deleteProduct);
+  };
+}
 
-//get product by id
-productsApiRouter.get("/:pid", async (req, res) => {
-  try {
-    const { pid } = req.params;
-    const product = await controller.getProduct(pid);
-    if (product) {
-      res.status(200).send({ status: "success", data: product });
-    } else {
-      const message = "PRODUCT NOT FOUND";
-      throw new Error(message);
-    }
-  } catch (error) {
-    return next(error);
+const productsApiRouter = new ProductsApiRouter();
+export default productsApiRouter.getRouter();
+
+async function getProducts(req, res, next) {
+  const { limit, page, category, stock, sort } = req.query;
+  const products = await controller.getProducts(limit, page, category, stock, sort);
+  const response = products;
+  const message = "Products retrieved successfully";
+  return res.json200(response, message);
+}
+
+async function getProduct(req, res, next) {
+  const { pid } = req.params;
+  const product = await controller.getProduct(pid);
+  if (product) {
+    const response = product;
+    const message = "Product retrieved successfully";
+    return res.json200(response, message);
+  } else {
+    return res.json404();
   }
-});
+}
 
-//create product
-productsApiRouter.post("/", async (req, res) => {
-  try {
-    const product = await controller.addProduct(req.body);
-    res.status(200).send({ status: "success", message: "Product added successfully", data: product });
-  } catch (error) {
-    return next(error);
+async function createProduct(req, res, next) {
+  const product = await controller.addProduct(req.body);
+  const response = product;
+  const message = "Product added successfully";
+  return res.json200(response, message);
+}
+
+async function updateProduct(req, res, next) {
+  const { pid } = req.params;
+  const product = await controller.updateProduct(pid, req.body);
+  if (product) {
+    const response = product;
+    const message = "Product updated successfully";
+    return res.json200(response, message);
+  } else {
+    return res.json404();
   }
-});
+}
 
-//update product
-productsApiRouter.put("/:pid", async (req, res) => {
-  try {
-    const { pid } = req.params;
-    const product = await controller.updateProduct(pid, req.body);
-    if (product) {
-      res.status(200).send({ status: "success", data: product });
-    } else {
-      const message = "PRODUCT NOT FOUND";
-      throw new Error(message);
-    }
-  } catch (error) {
-    return next(error);
+async function deleteProduct(req, res, next) {
+  const { pid } = req.params;
+  const product = await controller.deleteProduct(pid);
+  if (product) {
+    const response = product;
+    const message = "Product deleted successfully";
+    return res.json200(response, message);
+  } else {
+    return res.json404();
   }
-});
-
-//delete product
-productsApiRouter.delete("/:pid", async (req, res) => {
-  try {
-    const { pid } = req.params;
-    const product = await controller.deleteProduct(pid);
-    if (product) {
-      res.status(200).send({ status: "success", message: "Product deleted successfully", data: product });
-    } else {
-      const message = "PRODUCT NOT FOUND";
-      throw new Error(message);
-    }
-  } catch (error) {
-    return next(error);
-  }
-});
-
-export default productsApiRouter;
+}

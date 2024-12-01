@@ -1,97 +1,87 @@
-import { Router } from "express";
+import CustomRouter from "../../utils/CustomRouter.util.js";
 import CartController from "../../data/mongo/managers/carts.controller.js";
 
-const cartsApiRouter = Router();
 const controller = new CartController();
-
-//create cart
-cartsApiRouter.post("/", async (req, res, next) => {
-  try {
-    const cart = await controller.addCart();
-    res.status(200).send({ status: "success", message: "Cart created successfully", data: cart });
-  } catch (error) {
-    return next(error);
+class CartsApiRouter extends CustomRouter {
+  constructor() {
+    super();
+    this.init();
   }
-});
+  init = () => {
+    this.create("/", createCart);
+    this.read("/", getCarts);
+    this.read("/:cid", getCart);
+    this.create("/:cid/product/:pid", addProductToCart);
+    this.destroy("/:cid/product/:pid", deleteProductFromCart);
+    this.update("/:cid", updateCart);
+    this.update("/:cid/products/:pid", updateProductQuantity);
+    this.destroy("/:cid", deleteCart);
+  };
+}
+const cartsApiRouter = new CartsApiRouter();
+export default cartsApiRouter.getRouter();
 
-cartsApiRouter.get("/", async (req, res, next) => {
-  try {
-    const carts = await controller.getCarts();
-    res.status(200).send({ status: "success", data: carts });
-  } catch (error) {
-    return next(error);
-  }
-});
+async function createCart(req, res, next) {
+  const cart = await controller.addCart();
+  const response = cart;
+  const message = "Cart created successfully";
+  return res.json200(response, message);
+}
 
-//get cart
-cartsApiRouter.get("/:cid", async (req, res, next) => {
-  try {
-    const cart = await controller.getCart(req.params.cid);
-    res.status(200).send({ status: "success", data: cart });
-  } catch (error) {
-    return next(error);
-  }
-});
+async function getCarts(req, res, next) {
+  const carts = await controller.getCarts();
+  const response = carts;
+  const message = "Carts retrieved successfully";
+  return res.json200(response, message);
+}
 
-//add product to cart
-cartsApiRouter.post("/:cid/product/:pid", async (req, res, next) => {
-  try {
-    const { cid } = req.params;
-    const { quantity } = req.body;
+async function getCart(req, res, next) {
+  const cart = await controller.getCart(req.params.cid);
+  const response = cart;
+  const message = "Cart retrieved successfully";
+  return res.json200(response, message);
+}
 
-    const productData = { product: req.params.pid, quantity: quantity || 1 };
+async function addProductToCart(req, res, next) {
+  const { cid } = req.params;
+  const { quantity } = req.body;
+  const productData = { product: req.params.pid, quantity: quantity || 1 };
+  const updatedCart = await controller.addProduct(cid, productData);
+  const response = updatedCart;
+  const message = "Product added to cart successfully";
+  return res.json200(response, message);
+}
 
-    const updatedCart = await controller.addProduct(cid, productData);
-    res.status(200).send({ status: "success", data: updatedCart });
-  } catch (error) {
-    return next(error);
-  }
-});
+async function deleteProductFromCart(req, res, next) {
+  const { cid, pid } = req.params;
+  const updatedCart = await controller.deleteProduct(cid, pid);
+  const response = updatedCart;
+  const message = "Product removed from cart successfully";
+  return res.json200(response, message);
+}
 
-//delete product from cart
-cartsApiRouter.delete("/:cid/product/:pid", async (req, res, next) => {
-  try {
-    const { cid, pid } = req.params;
-    const updatedCart = await controller.deleteProduct(cid, pid);
-    res.status(200).send({ status: "success", message: "Product removed from cart", data: updatedCart });
-  } catch (error) {
-    return next(error);
-  }
-});
+async function updateCart(req, res, next) {
+  const { cid } = req.params;
+  const { products } = req.body;
+  const updatedCart = await controller.updateCartWithProducts(cid, products);
+  const response = updatedCart;
+  const message = "Cart updated successfully";
+  return res.json200(response, message);
+}
 
-//update cart
-cartsApiRouter.put("/:cid", async (req, res, next) => {
-  try {
-    const { cid } = req.params;
-    const { products } = req.body;
-    const updatedCart = await controller.updateCartWithProducts(cid, products);
-    res.status(200).send({ status: "success", data: updatedCart });
-  } catch (error) {
-    return next(error);
-  }
-});
+async function updateProductQuantity(req, res, next) {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+  const updatedCart = await controller.updateProduct(cid, pid, quantity);
+  const response = updatedCart;
+  const message = "Product quantity updated successfully";
+  return res.json200(response, message);
+}
 
-//update product quantity
-cartsApiRouter.put("/:cid/products/:pid", async (req, res, next) => {
-  try {
-    const { cid, pid } = req.params;
-    const { quantity } = req.body;
-    const updatedCart = await controller.updateProduct(cid, pid, quantity);
-    res.status(200).send({ status: "success", data: updatedCart });
-  } catch (error) {
-    return next(error);
-  }
-});
-
-//delete cart
-cartsApiRouter.delete("/:cid", async (req, res, next) => {
-  try {
-    const { cid } = req.params;
-    const deletedCart = await controller.deleteCart(cid);
-    res.status(200).send({ status: "success", message: "Cart deleted successfully", data: deletedCart });
-  } catch (error) {
-    return next(error);
-  }
-});
-
-export default cartsApiRouter;
+async function deleteCart(req, res, next) {
+  const { cid } = req.params;
+  const deletedCart = await controller.deleteCart(cid);
+  const response = deletedCart;
+  const message = "Cart deleted successfully";
+  return res.json200(response, message);
+}
