@@ -9,8 +9,8 @@ class CartsApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", ["USER", "ADMIN"], createCart);
-    this.read("/", ["ADMIN"], getCarts);
+    this.create("/", ["USER", "ADMIN"], passportCb("online"), createCart);
+    this.read("/", ["ADMIN"], passportCb("admin"), getCarts);
     this.read("/:cid", ["USER", "ADMIN"], getCart);
     this.create("/:cid/product/:pid", ["USER", "ADMIN"], addProductToCart);
     this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], deleteProductFromCart);
@@ -23,7 +23,8 @@ const cartsApiRouter = new CartsApiRouter();
 export default cartsApiRouter.getRouter();
 
 async function createCart(req, res, next) {
-  const cart = await controller.addCart();
+  console.log(req.user._id);
+  const cart = await controller.addCart(req.user._id);
   const response = cart;
   const message = "Cart created successfully";
   return res.json200(response, message);

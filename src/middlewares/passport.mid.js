@@ -69,20 +69,26 @@ passport.use(
 
 passport.use(
   "online",
-  new JwtStrategy({ jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]), secretOrKey: process.env.SECRET_KEY }, async (data, done) => {
-    try {
-      const { user_id } = data;
-      const user = await userController.readById(user_id);
-      const { isOnline } = user;
-      if (!isOnline) {
-        const info = { message: "USER IS NOT ONLINE", statusCode: 401 };
-        return done(null, false, info);
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
+      secretOrKey: process.env.SECRET_KEY,
+    },
+    async (data, done) => {
+      try {
+        const { user_id } = data;
+        const user = await userController.readById(user_id);
+        const { isOnline } = user;
+        if (!isOnline) {
+          const info = { message: "USER IS NOT ONLINE", statusCode: 401 };
+          return done(null, false, info);
+        }
+        return done(null, user);
+      } catch (error) {
+        return done(error);
       }
-      return done(null, user);
-    } catch (error) {
-      return done(error);
     }
-  })
+  )
 );
 
 passport.use(

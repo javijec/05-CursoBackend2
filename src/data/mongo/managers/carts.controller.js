@@ -5,9 +5,9 @@ import productModel from "../models/product.model.js";
 class CartController {
   constructor() {}
 
-  addCart = async () => {
+  addCart = async (user_id) => {
     try {
-      const cart = { products: [] };
+      const cart = { user_id, products: [] };
       const newCart = await cartModel.create(cart);
       if (!newCart) {
         throw new Error("Failed to create cart");

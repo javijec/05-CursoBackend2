@@ -6,14 +6,14 @@ mongoose.pluralize(null);
 const collection = "carts";
 
 const schema = new mongoose.Schema({
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   products: [
     {
-      user_id: { type: Number, required: true },
       product: { type: mongoose.Schema.Types.ObjectId, ref: "products", required: true },
       quantity: { type: Number, required: true, min: 1 },
-      state: { type: String, default: "reserved", enum: ["reserved", "delivered", "paid"] },
     },
   ],
+  state: { type: String, default: "reserved", enum: ["reserved", "delivered", "paid"] },
 });
 
 schema.pre("find", function () {

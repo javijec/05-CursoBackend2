@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { verifyTokenUtil } from "./token.util.js";
+import UsersController from "../data/mongo/managers/users.controller.js";
+
+const userController = new UsersController();
 
 class CustomRouter {
   constructor() {
@@ -32,7 +35,7 @@ class CustomRouter {
       const { role, user_id } = data;
       if (!role || !user_id) return res.json401();
       if ((policies.includes("USER") && role === "USER") || (policies.includes("ADMIN") && role === "ADMIN")) {
-        const user = await readById(user_id);
+        const user = await userController.readById(user_id);
         if (!user) return res.json401();
         req.user = user;
         return next();
