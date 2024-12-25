@@ -1,5 +1,7 @@
 import ProductDTO from "../dto/product.dto.js";
-import { ProductsManager } from "../dao/index.factory.js";
+import dao from "../dao/index.factory.js";
+
+const { ProductsManager } = dao;
 
 class ProductRepository {
   constructor() {

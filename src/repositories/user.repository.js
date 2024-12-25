@@ -1,5 +1,7 @@
 import UserDTO from "../dto/user.dto.js";
-import { UsersManager } from "../dao/index.factory.js";
+import dao from "../dao/index.factory.js";
+
+const { UsersManager } = dao;
 
 class UserRepository {
   constructor() {

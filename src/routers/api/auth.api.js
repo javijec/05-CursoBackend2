@@ -1,6 +1,10 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import passportCb from "../../middlewares/passportCb.mid.js";
-import { register, login, signout, online } from "../../controller/auth.controller.js";
+import AuthController from "../../controller/auth.controller.js";
+
+const controller = new AuthController();
+
+const { register, login, signout, online } = controller;
 
 class AuthApiRouter extends CustomRouter {
   constructor() {

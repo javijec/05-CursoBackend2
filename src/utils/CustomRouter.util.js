@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyTokenUtil } from "./token.util.js";
-import UsersController from "../data/mongo/managers/users.manager.js";
+import UsersController from "../controller/user.controller.js";
 
 const userController = new UsersController();
 
