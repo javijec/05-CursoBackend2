@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import UsersController from "../data/mongo/managers/users.controller.js";
+import UsersController from "../data/mongo/managers/users.manager.js";
 import { createHashUtil, verifyHashUtil } from "../utils/hash.util.js";
 import { createTokenUtil } from "../utils/token.util.js";
 
