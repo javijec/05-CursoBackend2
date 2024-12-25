@@ -4,8 +4,8 @@ import productModel from "./models/product.model.js";
 
 class CartController {
   constructor() {}
-
-  addCart = async (user_id) => {
+  //createOne
+  createOne = async (user_id) => {
     const cart = { user_id, products: [] };
     const newCart = await cartModel.create(cart);
     if (!newCart) {
@@ -13,13 +13,14 @@ class CartController {
     }
     return newCart;
   };
-
-  getCarts = async () => {
+  //readAll
+  readAll = async () => {
     const carts = await cartModel.find().lean();
     return carts || [];
   };
 
-  getCart = async (cid) => {
+  //readOne
+  readOne = async (cid) => {
     if (!mongoose.Types.ObjectId.isValid(cid)) {
       throw new Error("Invalid cart ID format");
     }
@@ -28,8 +29,8 @@ class CartController {
 
     return cart || {};
   };
-
-  updateProduct = async (cid, pid, quantity) => {
+  //updateOne
+  updateOne = async (cid, pid, quantity) => {
     if (!quantity || isNaN(quantity) || quantity < 0) {
       throw new Error("Invalid quantity value");
     }
@@ -51,8 +52,8 @@ class CartController {
 
     return updatedCart;
   };
-
-  updateCartWithProducts = async (cid, products) => {
+  //updateMany
+  updateMany = async (cid, products) => {
     const cart = await cartModel.findById(cid);
     if (!cart) {
       throw new Error("Cart not found");
@@ -81,8 +82,8 @@ class CartController {
 
     return updatedCart;
   };
-
-  addProduct = async (cid, { product, quantity = 1 }) => {
+  //addOne
+  addOne = async (cid, { product, quantity = 1 }) => {
     const productExists = await productModel.findById(product).lean();
     if (!productExists) {
       throw new Error("Product not found");
@@ -104,7 +105,7 @@ class CartController {
 
     return updatedCart;
   };
-
+  //deleteOne
   deleteProduct = async (cid, pid) => {
     const cart = await cartModel.findById(cid).populate("products.product", "_id");
     if (!cart) {
@@ -118,7 +119,7 @@ class CartController {
 
     return await cartModel.findByIdAndUpdate(cid, { $pull: { products: { product: pid } } }, { new: true });
   };
-
+  //deleteOne
   deleteCart = async (cid) => {
     const cart = await cartModel.findById(cid);
     if (!cart) {
