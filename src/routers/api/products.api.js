@@ -1,6 +1,10 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import passportCb from "../../middlewares/passportCb.mid.js";
-import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from "../../controller/products.controller.js";
+import ProductController from "../../controller/products.controller.js";
+
+const controller = new ProductController();
+
+const { getProducts, getProduct, createProduct, updateProduct, deleteProduct } = controller;
 
 class ProductsApiRouter extends CustomRouter {
   constructor() {

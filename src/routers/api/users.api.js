@@ -1,5 +1,9 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
-import { createUser, readUsers, updateUser, destroyUser } from "../../controller/user.controller.js";
+import UserController from "../../controller/user.controller.js";
+
+const controller = new UserController();
+
+const { createOne, readOnebyEmail, readOnebyId, readAll, updateOne, deleteOne } = controller;
 
 class UsersApiRouter extends CustomRouter {
   constructor() {
@@ -7,10 +11,10 @@ class UsersApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", ["USER", "ADMIN"], createUser);
-    this.read("/", ["USER", "ADMIN"], readUsers);
-    this.update("/:id", ["USER", "ADMIN"], updateUser);
-    this.destroy("/:id", ["USER", "ADMIN"], destroyUser);
+    this.create("/", ["USER", "ADMIN"], createOne);
+    this.read("/", ["USER", "ADMIN"], readAll);
+    this.update("/:id", ["USER", "ADMIN"], updateOne);
+    this.destroy("/:id", ["USER", "ADMIN"], deleteOne);
   };
 }
 
