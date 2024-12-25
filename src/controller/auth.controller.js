@@ -1,24 +1,24 @@
-async function register(req, res, next) {
-  const user = req.user;
-  const response = await user._id;
-  const message = "USER REGISTERED";
-  return res.json201(response, message);
-}
-async function login(req, res, next) {
-  const user = req.user;
-  const response = user._id;
-  const message = "USER LOGGED IN";
-  return res.cookie("token", user.token).json200(response, message);
-}
-async function signout(req, res, next) {
-  const response = req.user._id;
-  const message = "USER LOGGED OUT";
-  return res.cookie("token", req.user.token, { maxAge: 1 }).json200(response, message);
-}
-async function online(req, res, next) {
-  const response = req.user.email;
-  const message = "USER IS ONLINE";
-  return res.json200(response, message);
+class authController {
+  constructor() {}
+  register = async (req, res) => {
+    const { _id } = req.user;
+    const message = "User registered successfully";
+    return res.json201(_id, message);
+  };
+  login = async (req, res) => {
+    const { token } = req.user;
+    const message = "User logged in successfully";
+    const opts = { maxAge: 60 * 60 * 24 * 7 * 1000, httpOnly: true };
+    return res.cookie("token", token, opts).json200("OK", message);
+  };
+  signout = async (req, res) => {
+    const message = "User logged out successfully";
+    return res.cookie("token", req.user.token, { maxAge: 1 }).json200(response, message);
+  };
+  online = async (req, res) => {
+    const message = "User is online";
+    return res.json200("OK", message);
+  };
 }
 
-export { register, login, signout, online };
+export default authController;

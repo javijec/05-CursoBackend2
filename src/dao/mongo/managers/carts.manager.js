@@ -24,11 +24,10 @@ class CartController {
     if (!mongoose.Types.ObjectId.isValid(cid)) {
       throw new Error("Invalid cart ID format");
     }
-
     const cart = await cartModel.findById(cid).lean();
-
     return cart || {};
   };
+
   //updateOne
   updateOne = async (cid, pid, quantity) => {
     if (!quantity || isNaN(quantity) || quantity < 0) {
