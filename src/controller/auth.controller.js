@@ -1,3 +1,7 @@
+import AuthServices from "../services/auth.services.js";
+
+const { veryfy } = new AuthServices();
+
 class authController {
   constructor() {}
   register = async (req, res) => {
@@ -18,6 +22,15 @@ class authController {
   online = async (req, res) => {
     const message = "User is online";
     return res.json200("OK", message);
+  };
+  veryfy = async (req, res) => {
+    const { verifyCodeFromClient } = req.body;
+    const response = await verify(email, verifyCodeFromClient);
+    if (response) {
+      return res.json200("OK", response);
+    } else {
+      return res.json401();
+    }
   };
 }
 

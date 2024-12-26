@@ -4,6 +4,8 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import UsersController from "../controller/user.controller.js";
 import { createHashUtil, verifyHashUtil } from "../utils/hash.util.js";
 import { createTokenUtil } from "../utils/token.util.js";
+import { sentVerifyEmail } from "../utils/nodemailer.util.js";
+import crypto from "crypto";
 
 const userController = new UsersController();
 
@@ -17,7 +19,10 @@ passport.use(
         return done(null, false, info);
       }
       const hashedPassword = createHashUtil(password);
-      const user = await userController.createUser({ email, password: hashedPassword, name: req.body.name || "Default Name" });
+      const verifyCode = crypto.randomBytes(16).toString("hex");
+      const user = await userController.createUser({ email, password: hashedPassword, name: req.body.name || "Default Name", verifyCode });
+
+      await sendVerifyEmail({ to: user.email, verifyCode });
       return done(null, user);
     } catch (error) {
       return done(error);

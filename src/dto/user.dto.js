@@ -10,6 +10,10 @@ class UserDTO {
     this.role = user.role;
     this.photo = user.photo;
     this.isOnline = user.isOnline;
+    this.verifyCode = user.verifyCode;
+    this.verify = user.verify;
+    PERSISTENCE !== "mongo" && (this.createdAt = new Date());
+    PERSISTENCE !== "mongo" && (this.updatedAt = new Date());
   }
 }
 
