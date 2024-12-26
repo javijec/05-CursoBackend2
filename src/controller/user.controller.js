@@ -13,7 +13,6 @@ class UserController {
   };
   readUserbyEmailController = async (req, res) => {
     const email = req.params.email;
-    console.log("controller");
     const user = await this.service.readUserbyEmailServices(email);
     const response = user;
     const message = "User retrieved successfully";

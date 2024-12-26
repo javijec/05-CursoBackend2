@@ -13,6 +13,8 @@ class UserRepository {
     return new this.dto(newUser);
   };
   readUserbyEmailRepository = async (email) => {
+    console.log("repository");
+
     const user = await this.manager.readUserbyEmail(email);
     return new this.dto(user);
   };

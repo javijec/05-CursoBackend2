@@ -12,7 +12,8 @@ class UsersManager {
   };
   //readOnebyEmail
   readUserbyEmail = async (email) => {
-    const user = await UserModel.findOne({ email }).lean();
+    console.log(email);
+    const user = await UserModel.findOne({ email: email }).lean();
     return user;
   };
   //readOnebyId

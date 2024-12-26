@@ -6,22 +6,22 @@ import { createHashUtil, verifyHashUtil } from "../utils/hash.util.js";
 import { createTokenUtil } from "../utils/token.util.js";
 import { sentVerifyEmail } from "../utils/nodemailer.util.js";
 import crypto from "crypto";
-import UsersController from "../controller/user.controller.js";
+import UserService from "../services/user.services.js";
 
-const userController = new UsersController();
+const userService = new UserService();
 
 passport.use(
   "register",
   new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, email, password, done) => {
     try {
-      const one = await userController.readUserbyEmailController(email);
+      const one = await userService.readUserbyEmailServices(email);
       if (one) {
         const info = { message: "USER ALREADY EXISTS", statusCode: 401 };
         return done(null, false, info);
       }
       const hashedPassword = createHashUtil(password);
       const verifyCode = crypto.randomBytes(16).toString("hex");
-      const user = await userController.createUserController({
+      const user = await userService.createUserServices({
         email,
         password: hashedPassword,
         name: req.body.name || "Default Name",
@@ -40,7 +40,7 @@ passport.use(
   "login",
   new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
     try {
-      const user = await userController.readUserbyEmailController(email);
+      const user = await userService.readUserbyEmailServices(email);
       if (!user) {
         const info = { message: "USER NOT FOUND", statusCode: 401 };
         return done(null, false, info);
@@ -55,7 +55,7 @@ passport.use(
       const data = { user_id: user._id, role: user.role };
       const token = createTokenUtil(data);
       user.token = token;
-      const update = await userController.updateUserController(user._id, { isOnline: true });
+      const update = await userService.updateUserServices(user._id, { isOnline: true });
       return done(null, user);
     } catch (error) {
       return done(error);
@@ -74,7 +74,7 @@ passport.use(
           const info = { message: "NOT AUTHORIZED", statusCode: 403 };
           return done(null, false, info);
         }
-        const user = await userController.readOnebyIdController(user_id);
+        const user = await userService.readOnebyIdServices(user_id);
         return done(null, user);
       } catch (error) {}
     }
@@ -91,7 +91,7 @@ passport.use(
     async (data, done) => {
       try {
         const { user_id } = data;
-        const user = await userController.readOnebyIdController(user_id);
+        const user = await userService.readOnebyIdServices(user_id);
         const { isOnline } = user;
         if (!isOnline) {
           const info = { message: "USER IS NOT ONLINE", statusCode: 401 };
@@ -112,8 +112,8 @@ passport.use(
     async (data, done) => {
       try {
         const { user_id } = data;
-        const user = await userController.readOnebyIdController(user_id);
-        await userController.updateUserController(user_id, { isOnline: false });
+        const user = await userService.readOnebyIdServices(user_id);
+        await userService.updateUserController(user_id, { isOnline: false });
         user.token = createTokenUtil({ user_id: null });
         return done(null, user);
       } catch (error) {

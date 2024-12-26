@@ -4,6 +4,9 @@ const { PERSISTENCE } = process.env;
 
 class UserDTO {
   constructor(user) {
+    if (!user) {
+      throw new Error("User data is required");
+    }
     PERSISTENCE !== "mongo" && (this._id = crypto.randomBytes(12).toString("hex"));
     this.email = user.email;
     this.password = user.password;
