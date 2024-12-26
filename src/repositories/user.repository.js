@@ -8,28 +8,29 @@ class UserRepository {
     this.manager = new UsersManager();
     this.dto = UserDTO;
   }
-  createOne = async (user) => {
-    const newUser = await this.manager.createOne(user);
+  createUserRepository = async (user) => {
+    const newUser = await this.manager.createUser(user);
     return new this.dto(newUser);
   };
-  readOnebyEmail = async (email) => {
-    const user = await this.manager.readOnebyEmail(email);
+  readUserbyEmailRepository = async (email) => {
+    const user = await this.manager.readUserbyEmail(email);
     return new this.dto(user);
   };
-  readOnebyId = async (id) => {
+  readOnebyIdRepository = async (id) => {
     const user = await this.manager.readOnebyId(id);
     return new this.dto(user);
   };
-  readAll = async () => {
-    const users = await this.manager.readAll();
+  readAllUsersRepository = async () => {
+    const users = await this.manager.readAllUsers();
+    console.log(users);
     return users.map((user) => new this.dto(user));
   };
-  updateOne = async (id, data) => {
-    const updatedUser = await this.manager.updateOne(id, data);
+  updateUserRepository = async (id, data) => {
+    const updatedUser = await this.manager.updateUser(id, data);
     return new this.dto(updatedUser);
   };
-  deleteOne = async (id) => {
-    const deletedUser = await this.manager.deleteOne(id);
+  deleteUserRepository = async (id) => {
+    const deletedUser = await this.manager.deleteUser(id);
     return new this.dto(deletedUser);
   };
 }

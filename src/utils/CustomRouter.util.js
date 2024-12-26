@@ -8,7 +8,9 @@ class CustomRouter {
   constructor() {
     this._router = Router();
   }
+
   getRouter = () => this._router;
+
   _applyCallbacks = (callbacks) =>
     callbacks.map((cb) => async (req, res, next) => {
       try {
@@ -17,6 +19,7 @@ class CustomRouter {
         return next(error);
       }
     });
+
   responses = (req, res, next) => {
     res.json200 = (response, message) => res.status(200).json({ response, message });
     res.json201 = (response, message) => res.status(201).json({ response, message });
@@ -26,6 +29,7 @@ class CustomRouter {
     res.json404 = () => res.status(404).json({ error: "Not found!" });
     return next();
   };
+
   policies = (policies) => async (req, res, next) => {
     try {
       if (policies.includes("PUBLIC")) return next();
@@ -35,7 +39,7 @@ class CustomRouter {
       const { role, user_id } = data;
       if (!role || !user_id) return res.json401();
       if ((policies.includes("USER") && role === "USER") || (policies.includes("ADMIN") && role === "ADMIN")) {
-        const user = await userController.readById(user_id);
+        const user = await userController.readOnebyIdController(user_id);
         if (!user) return res.json401();
         req.user = user;
         return next();
@@ -46,11 +50,30 @@ class CustomRouter {
     }
   };
 
-  create = (path, policies, ...cbs) => this._router.post(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
-  read = (path, policies, ...cbs) => this._router.get(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
-  update = (path, policies, ...cbs) => this._router.put(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
-  destroy = (path, policies, ...cbs) => this._router.delete(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
-  use = (path, policies, ...cbs) => this._router.use(path, this.responses, this.policies(policies), this._applyCallbacks(cbs));
+  create = (path, policies, ...cbs) => {
+    if (!cbs || cbs.length === 0) throw new Error("Se requiere al menos un callback");
+    return this._router.post(path, this.responses, this.policies(policies), ...this._applyCallbacks(cbs));
+  };
+
+  read = (path, policies, ...cbs) => {
+    if (!cbs || cbs.length === 0) throw new Error("Se requiere al menos un callback");
+    return this._router.get(path, this.responses, this.policies(policies), ...this._applyCallbacks(cbs));
+  };
+
+  update = (path, policies, ...cbs) => {
+    if (!cbs || cbs.length === 0) throw new Error("Se requiere al menos un callback");
+    return this._router.put(path, this.responses, this.policies(policies), ...this._applyCallbacks(cbs));
+  };
+
+  destroy = (path, policies, ...cbs) => {
+    if (!cbs || cbs.length === 0) throw new Error("Se requiere al menos un callback");
+    return this._router.delete(path, this.responses, this.policies(policies), ...this._applyCallbacks(cbs));
+  };
+
+  use = (path, policies, ...cbs) => {
+    if (!cbs || cbs.length === 0) throw new Error("Se requiere al menos un callback");
+    return this._router.use(path, this.responses, this.policies(policies), ...this._applyCallbacks(cbs));
+  };
 }
 
 export default CustomRouter;

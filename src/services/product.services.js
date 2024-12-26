@@ -4,28 +4,28 @@ class ProductService {
   constructor() {
     this.repository = new ProductRepository();
   }
-  ReadAllpaginated = async (limit = 10, page = 1, category, stock, sort) => {
-    const products = await this.repository.ReadAllpaginated(limit, page, category, stock, sort);
+  readAllProductspaginatedServices = async (limit = 10, page = 1, category, stock, sort) => {
+    const products = await this.repository.readAllProductspaginatedRepository(limit, page, category, stock, sort);
     return products;
   };
-  readOne = async (pid) => {
-    const product = await this.repository.readOne(pid);
+  readProductServices = async (pid) => {
+    const product = await this.repository.readProductRepository(pid);
     return product;
   };
-  createOne = async (product) => {
-    const newProduct = await this.repository.createOne(product);
+  createProductServices = async (product) => {
+    const newProduct = await this.repository.createProductRepository(product);
     return newProduct;
   };
-  updateOne = async (pid, product) => {
-    const updatedProduct = await this.repository.updateOne(pid, product);
+  updateProductServices = async (pid, product) => {
+    const updatedProduct = await this.repository.updateProductRepository(pid, product);
     return updatedProduct;
   };
-  deleteOne = async (pid) => {
-    const deletedProduct = await this.repository.deleteOne(pid);
+  deletedProductServices = async (pid) => {
+    const deletedProduct = await this.repository.deletedProductRepository(pid);
     return deletedProduct;
   };
-  readAll = async () => {
-    const products = await this.repository.readAll();
+  readAllProductsServices = async () => {
+    const products = await this.repository.readAllProductsRepository();
     return products;
   };
 }

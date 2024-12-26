@@ -1,9 +1,9 @@
 import UserModel from "./models/user.model.js";
 
-class UsersController {
+class UsersManager {
   constructor() {}
   //createOne
-  createOne = async (data) => {
+  createUser = async (data) => {
     const user = await UserModel.create(data);
     if (!user) {
       throw new Error("Failed to create user");
@@ -11,22 +11,22 @@ class UsersController {
     return user;
   };
   //readOnebyEmail
-  readOnebyEmail = async (email) => {
+  readUserbyEmail = async (email) => {
     const user = await UserModel.findOne({ email }).lean();
     return user;
   };
   //readOnebyId
-  readOnebyId = async (id) => {
+  readUserbyId = async (id) => {
     const user = await UserModel.findOne({ _id: id }).lean();
     return user;
   };
   //readAll
-  readAll = async () => {
+  readAllUsers = async () => {
     const users = await UserModel.find().lean();
     return users.length ? users : {};
   };
   //updateOne
-  updateOne = async (id, data) => {
+  updateUser = async (id, data) => {
     const options = { new: true };
     const user = await UserModel.findByIdAndUpdate(id, data, options);
     if (!user) {
@@ -35,7 +35,7 @@ class UsersController {
     return user;
   };
   //deleteOne
-  deleteOne = async (id) => {
+  deleteUser = async (id) => {
     const user = await UserModel.findByIdAndDelete(id);
     if (!user) {
       throw new Error("User not found");
@@ -44,4 +44,4 @@ class UsersController {
   };
 }
 
-export default UsersController;
+export default UsersManager;

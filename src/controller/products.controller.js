@@ -4,29 +4,29 @@ class ProductController {
   constructor() {
     this.service = new ProductService();
   }
-  ReadAllpaginated = async (req, res) => {
+  ReadAllpaginatedController = async (req, res) => {
     const { limit, page, category, stock, sort } = req.query;
-    const products = await this.service.ReadAllpaginated(limit, page, category, stock, sort);
+    const products = await this.service.readAllProductspaginatedServices(limit, page, category, stock, sort);
     const response = products;
     const message = "Products retrieved successfully";
     return res.json200(response, message);
   };
-  readOne = async (req, res) => {
+  readOneController = async (req, res) => {
     const { pid } = req.params;
-    const product = await this.service.readOne(pid);
+    const product = await this.service.readProductServices(pid);
     const response = product;
     const message = "Product retrieved successfully";
     return res.json200(response, message);
   };
-  createOne = async (req, res) => {
-    const product = await this.service.createOne(req.body);
+  createOneController = async (req, res) => {
+    const product = await this.service.createProductServices(req.body);
     const response = product;
     const message = "Product added successfully";
     return res.json200(response, message);
   };
-  updateOne = async (req, res) => {
+  updateOneController = async (req, res) => {
     const { pid } = req.params;
-    const product = await this.service.updateOne(pid, req.body);
+    const product = await this.service.updateProductServices(pid, req.body);
     const response = product;
     const message = "Product updated successfully";
     if (response) {
@@ -35,9 +35,9 @@ class ProductController {
       return res.json404();
     }
   };
-  deleteOne = async (req, res) => {
+  deleteOneController = async (req, res) => {
     const { pid } = req.params;
-    const product = await this.service.deleteOne(pid);
+    const product = await this.service.deletedProductServices(pid);
     const response = product;
     const message = "Product deleted successfully";
     if (response) {
@@ -46,8 +46,8 @@ class ProductController {
       return res.json404();
     }
   };
-  readAll = async (req, res) => {
-    const products = await this.service.readAll();
+  readAllController = async (req, res) => {
+    const products = await this.service.readAllProductsServices();
     const response = products;
     const message = "Products retrieved successfully";
     return res.json200(response, message);

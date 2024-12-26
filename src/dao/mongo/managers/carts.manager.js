@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 import cartModel from "./models/cart.model.js";
 import productModel from "./models/product.model.js";
 
-class CartController {
+class CartsManager {
   constructor() {}
   //createOne
-  createOne = async (user_id) => {
+  createCart = async (user_id) => {
     const cart = { user_id, products: [] };
     const newCart = await cartModel.create(cart);
     if (!newCart) {
@@ -14,13 +14,13 @@ class CartController {
     return newCart;
   };
   //readAll
-  readAll = async () => {
+  readAllCart = async () => {
     const carts = await cartModel.find().lean();
     return carts || [];
   };
 
   //readOne
-  readOne = async (cid) => {
+  readCart = async (cid) => {
     if (!mongoose.Types.ObjectId.isValid(cid)) {
       throw new Error("Invalid cart ID format");
     }
@@ -29,7 +29,7 @@ class CartController {
   };
 
   //updateOne
-  updateOne = async (cid, pid, quantity) => {
+  updateCartOneProduct = async (cid, pid, quantity) => {
     if (!quantity || isNaN(quantity) || quantity < 0) {
       throw new Error("Invalid quantity value");
     }
@@ -47,12 +47,16 @@ class CartController {
       throw new Error("Product not found in cart");
     }
 
-    const updatedCart = await cartModel.findByIdAndUpdate(cid, { $set: { [`products.${productIndex}.quantity`]: quantity } }, { new: true });
+    const updatedCart = await cartModel.findByIdAndUpdate(
+      cid,
+      { $set: { [`products.${productIndex}.quantity`]: quantity } },
+      { new: true }
+    );
 
     return updatedCart;
   };
   //updateMany
-  updateMany = async (cid, products) => {
+  updateCartManyProducts = async (cid, products) => {
     const cart = await cartModel.findById(cid);
     if (!cart) {
       throw new Error("Cart not found");
@@ -82,7 +86,7 @@ class CartController {
     return updatedCart;
   };
   //addOne
-  addOne = async (cid, { product, quantity = 1 }) => {
+  addOneProduct = async (cid, { product, quantity = 1 }) => {
     const productExists = await productModel.findById(product).lean();
     if (!productExists) {
       throw new Error("Product not found");
@@ -97,15 +101,23 @@ class CartController {
     let updatedCart;
 
     if (existingProductIndex === -1) {
-      updatedCart = await cartModel.findByIdAndUpdate(cid, { $push: { products: { product: product, quantity: quantity } } }, { new: true });
+      updatedCart = await cartModel.findByIdAndUpdate(
+        cid,
+        { $push: { products: { product: product, quantity: quantity } } },
+        { new: true }
+      );
     } else {
-      updatedCart = await cartModel.findByIdAndUpdate(cid, { $inc: { [`products.${existingProductIndex}.quantity`]: quantity } }, { new: true });
+      updatedCart = await cartModel.findByIdAndUpdate(
+        cid,
+        { $inc: { [`products.${existingProductIndex}.quantity`]: quantity } },
+        { new: true }
+      );
     }
 
     return updatedCart;
   };
   //deleteOne
-  deleteProduct = async (cid, pid) => {
+  deleteOneProduct = async (cid, pid) => {
     const cart = await cartModel.findById(cid).populate("products.product", "_id");
     if (!cart) {
       throw new Error("Cart not found");
@@ -134,4 +146,4 @@ class CartController {
     return deletedCart;
   };
 }
-export default CartController;
+export default CartsManager;

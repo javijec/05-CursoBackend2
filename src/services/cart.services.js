@@ -4,37 +4,37 @@ class CartService {
   constructor() {
     this.repository = new CartRepository();
   }
-  createOne = async (user_id) => {
-    const newCart = await this.repository.createOne(user_id);
+  createCartServices = async (user_id) => {
+    const newCart = await this.repository.createCartRepository(user_id);
     return newCart;
   };
-  readAll = async () => {
-    const carts = await this.repository.readAll();
+  readAllCartServices = async () => {
+    const carts = await this.repository.readAllCartRepository();
     return carts;
   };
 
-  readOne = async (cid) => {
-    const cart = await this.repository.readOne(cid);
+  readCartServices = async (cid) => {
+    const cart = await this.repository.readCartRepository(cid);
     return cart;
   };
-  updateOne = async (cid, pid, quantity) => {
-    const updatedCart = await this.repository.updateOne(cid, pid, quantity);
+  updateCartOneProductServices = async (cid, pid, quantity) => {
+    const updatedCart = await this.repository.updateCartOneProductRepository(cid, pid, quantity);
     return updatedCart;
   };
-  updateMany = async (cid, products) => {
-    const updatedCart = await this.repository.updateMany(cid, products);
+  updateCartManyProductsServices = async (cid, products) => {
+    const updatedCart = await this.repository.updateCartManyProductsRepository(cid, products);
     return updatedCart;
   };
-  addOne = async (cid, { product, quantity = 1 }) => {
-    const addedCart = await this.repository.addOne(cid, { product, quantity });
+  addOneProductServices = async (cid, { product, quantity = 1 }) => {
+    const addedCart = await this.repository.addOneProductRepository(cid, { product, quantity });
     return addedCart;
   };
-  deleteProduct = async (cid, pid) => {
-    const deletedCart = await this.repository.deleteProduct(cid, pid);
+  deleteOneProductServices = async (cid, pid) => {
+    const deletedCart = await this.repository.deleteOneProductRepository(cid, pid);
     return deletedCart;
   };
-  deleteCart = async (cid) => {
-    const deletedCart = await this.repository.deleteCart(cid);
+  deleteCartServices = async (cid) => {
+    const deletedCart = await this.repository.deleteCartRepository(cid);
     return deletedCart;
   };
 }

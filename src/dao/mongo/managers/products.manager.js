@@ -1,10 +1,14 @@
 import productModel from "./models/product.model.js";
 
-class ProductController {
+class ProductManager {
   constructor() {}
 
+  readAllProducts = async () => {
+    const products = await productModel.find().lean();
+    return products.length ? products : {};
+  };
   //ReadAllpaginated
-  ReadAllpaginated = async (limit = 10, page = 1, category, stock, sort) => {
+  readAllProductspaginated = async (limit = 10, page = 1, category, stock, sort) => {
     let query = {};
     const options = { limit, page, lean: true };
     if (sort) {
@@ -25,7 +29,7 @@ class ProductController {
     return products;
   };
   //readOne
-  readOne = async (pid) => {
+  readProduct = async (pid) => {
     const product = await productModel.findById(pid).lean();
     if (!product) {
       throw new Error("Product not found");
@@ -33,7 +37,7 @@ class ProductController {
     return product;
   };
   //createOne
-  createOne = async (product) => {
+  createProduct = async (product) => {
     if (!product || Object.keys(product).length === 0) {
       throw new Error("Invalid product data");
     }
@@ -45,7 +49,7 @@ class ProductController {
     return newProduct;
   };
   //updateOne
-  updateOne = async (pid, product) => {
+  updateProduct = async (pid, product) => {
     if (!product || Object.keys(product).length === 0) {
       throw new Error("Invalid product data");
     }
@@ -64,7 +68,7 @@ class ProductController {
     return updatedProduct;
   };
   //deleteOne
-  deleteOne = async (pid) => {
+  deletedProduct = async (pid) => {
     const product = await productModel.findById(pid);
     if (!product) {
       console.log("Product not found");
@@ -79,10 +83,6 @@ class ProductController {
     return deletedProduct; //
   };
   //readAll
-  readAll = async () => {
-    const products = await productModel.find().lean();
-    return products.length ? products : {};
-  };
 }
 
-export default ProductController;
+export default ProductManager;

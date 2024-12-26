@@ -1,10 +1,10 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
-import passportCb from "../../middlewares/passportCb.mid.js";
 import ProductController from "../../controller/products.controller.js";
 
 const controller = new ProductController();
 
-const { getProducts, getProduct, createProduct, updateProduct, deleteProduct } = controller;
+const { readAllController, readOneController, createOneController, updateOneController, deleteOneController } =
+  controller;
 
 class ProductsApiRouter extends CustomRouter {
   constructor() {
@@ -12,11 +12,11 @@ class ProductsApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.read("/", ["USER", "ADMIN"], getProducts);
-    this.read("/:pid", ["USER", "ADMIN"], getProduct);
-    this.create("/", ["ADMIN"], createProduct);
-    this.update("/:pid", ["ADMIN"], updateProduct);
-    this.destroy("/:pid", ["ADMIN"], deleteProduct);
+    this.read("/", ["PUBLIC", "USER", "ADMIN"], readAllController);
+    this.read("/:pid", ["USER", "ADMIN"], readOneController);
+    this.create("/", ["ADMIN"], createOneController);
+    this.update("/:pid", ["ADMIN"], updateOneController);
+    this.destroy("/:pid", ["ADMIN"], deleteOneController);
   };
 }
 

@@ -4,7 +4,16 @@ import CartController from "../../controller/cart.controller.js";
 
 const controller = new CartController();
 
-const { createOne, readAll, readOne, updateOne, updateMany, addOne, deleteProduct, deleteCart } = controller;
+const {
+  createCartController,
+  readAllCartController,
+  readCartController,
+  updateCartOneProductController,
+  updateCartManyProductsController,
+  addOneProductController,
+  deleteOneProductController,
+  deleteCartController,
+} = controller;
 
 class CartsApiRouter extends CustomRouter {
   constructor() {
@@ -12,14 +21,14 @@ class CartsApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", ["USER", "ADMIN"], passportCb("online"), createOne);
-    this.read("/", ["ADMIN"], passportCb("admin"), readAll);
-    this.read("/:cid", ["USER", "ADMIN"], readOne);
-    this.create("/:cid/product/:pid", ["USER", "ADMIN"], updateOne);
-    this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], deleteProduct);
-    this.update("/:cid", ["USER", "ADMIN"], updateMany);
-    this.update("/:cid/products/:pid", ["USER", "ADMIN"], deleteProduct);
-    this.destroy("/:cid", ["USER", "ADMIN"], deleteCart);
+    this.create("/", ["USER", "ADMIN"], passportCb("online"), createCartController);
+    this.read("/", ["ADMIN"], passportCb("admin"), readAllCartController);
+    this.read("/:cid", ["USER", "ADMIN"], readCartController);
+    this.create("/:cid/product/:pid", ["USER", "ADMIN"], updateCartOneProductController);
+    this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], addOneProductController);
+    this.update("/:cid", ["USER", "ADMIN"], updateCartManyProductsController);
+    this.update("/:cid/products/:pid", ["USER", "ADMIN"], deleteOneProductController);
+    this.destroy("/:cid", ["USER", "ADMIN"], deleteCartController);
   };
 }
 const cartsApiRouter = new CartsApiRouter();

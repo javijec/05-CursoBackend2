@@ -8,28 +8,28 @@ class ProductRepository {
     this.manager = new ProductsManager();
     this.dto = ProductDTO;
   }
-  ReadAllpaginated = async (limit = 10, page = 1, category, stock, sort) => {
-    const products = await this.manager.ReadAllpaginated(limit, page, category, stock, sort);
+  readAllProductspaginatedRepository = async (limit = 10, page = 1, category, stock, sort) => {
+    const products = await this.manager.readAllProductspaginated(limit, page, category, stock, sort);
     return products.map((product) => new this.dto(product));
   };
-  readOne = async (pid) => {
-    const product = await this.manager.readOne(pid);
+  readProductRepository = async (pid) => {
+    const product = await this.manager.readProduct(pid);
     return new this.dto(product);
   };
-  createOne = async (product) => {
-    const newProduct = await this.manager.createOne(product);
+  createProductRepository = async (product) => {
+    const newProduct = await this.manager.createProduct(product);
     return new this.dto(newProduct);
   };
-  updateOne = async (pid, product) => {
-    const updatedProduct = await this.manager.updateOne(pid, product);
+  updateProductRepository = async (pid, product) => {
+    const updatedProduct = await this.manager.updateProduct(pid, product);
     return new this.dto(updatedProduct);
   };
-  deleteOne = async (pid) => {
-    const deletedProduct = await this.manager.deleteOne(pid);
+  deletedProductRepository = async (pid) => {
+    const deletedProduct = await this.manager.deletedProduct(pid);
     return new this.dto(deletedProduct);
   };
-  readAll = async () => {
-    const products = await this.manager.readAll();
+  readAllProductsRepository = async () => {
+    const products = await this.manager.readAllProducts();
     return products.map((product) => new this.dto(product));
   };
 }

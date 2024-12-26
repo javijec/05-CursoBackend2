@@ -4,28 +4,29 @@ class UserService {
   constructor() {
     this.repository = new UserRepository();
   }
-  createOne = async (user) => {
-    const newUser = await this.repository.createOne(user);
+  createUserServices = async (user) => {
+    const newUser = await this.repository.createUserRepository(user);
     return newUser;
   };
-  readOnebyEmail = async (email) => {
-    const user = await this.repository.readOnebyEmail(email);
+  readUserbyEmailServices = async (email) => {
+    console.log("service");
+    const user = await this.repository.readUserbyEmailRepository(email);
     return user;
   };
-  readOnebyId = async (id) => {
-    const user = await this.repository.readOnebyId(id);
+  readOnebyIdServices = async (id) => {
+    const user = await this.repository.readOnebyIdRepository(id);
     return user;
   };
-  readAll = async () => {
-    const users = await this.repository.readAll();
+  readAllUsersServices = async () => {
+    const users = await this.repository.readAllUsersRepository();
     return users;
   };
-  updateOne = async (id, data) => {
-    const updatedUser = await this.repository.updateOne(id, data);
+  updateUserServices = async (id, data) => {
+    const updatedUser = await this.repository.updateUserRepository(id, data);
     return updatedUser;
   };
-  deleteOne = async (id) => {
-    const deletedUser = await this.repository.deleteOne(id);
+  deleteUserServices = async (id) => {
+    const deletedUser = await this.repository.deleteUserRepository(id);
     return deletedUser;
   };
 }

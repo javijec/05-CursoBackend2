@@ -4,67 +4,67 @@ class CartController {
   constructor() {
     this.service = new CartService();
   }
-  createOne = async (req, res) => {
+  createCartController = async (req, res) => {
     const { user_id } = req.user._id;
-    const newCart = await this.service.createOne(user_id);
+    const newCart = await this.service.createCartServices(user_id);
     const response = newCart;
     const message = "Cart created successfully";
     return res.json200(response, message);
   };
 
-  readAll = async (req, res) => {
-    const carts = await this.service.readAll();
+  readAllCartController = async (req, res) => {
+    const carts = await this.service.readAllCartServices();
     const response = carts;
     const message = "Carts retrieved successfully";
     return res.json200(response, message);
   };
 
-  readOne = async (req, res) => {
+  readCartController = async (req, res) => {
     const { cid } = req.params;
-    const cart = await this.service.readOne(cid);
+    const cart = await this.service.readCartServices(cid);
     const response = cart;
     const message = "Cart retrieved successfully";
     return res.json200(response, message);
   };
 
-  updateOne = async (req, res) => {
+  updateCartOneProductController = async (req, res) => {
     const { cid } = req.params;
     const { pid, quantity } = req.body;
-    const updatedCart = await this.service.updateOne(cid, pid, quantity);
+    const updatedCart = await this.service.updateCartOneProductServices(cid, pid, quantity);
     const response = updatedCart;
     const message = "Product quantity updated successfully";
     return res.json200(response, message);
   };
 
-  updateMany = async (req, res) => {
+  updateCartManyProductsController = async (req, res) => {
     const { cid } = req.params;
     const { products } = req.body;
-    const updatedCart = await this.service.updateMany(cid, products);
+    const updatedCart = await this.service.updateCartManyProductsServices(cid, products);
     const response = updatedCart;
     const message = "Cart updated successfully";
     return res.json200(response, message);
   };
 
-  addOne = async (req, res) => {
+  addOneProductController = async (req, res) => {
     const { cid } = req.params;
     const { product, quantity = 1 } = req.body;
-    const addedCart = await this.service.addOne(cid, { product, quantity });
+    const addedCart = await this.service.addOneProductServices(cid, { product, quantity });
     const response = addedCart;
     const message = "Product added to cart successfully";
     return res.json200(response, message);
   };
 
-  deleteProduct = async (req, res) => {
+  deleteOneProductController = async (req, res) => {
     const { cid, pid } = req.params;
-    const deletedCart = await this.service.deleteProduct(cid, pid);
+    const deletedCart = await this.service.deleteOneProductServices(cid, pid);
     const response = deletedCart;
     const message = "Product removed from cart successfully";
     return res.json200(response, message);
   };
 
-  deleteCart = async (req, res) => {
+  deleteCartController = async (req, res) => {
     const { cid } = req.params;
-    const deletedCart = await this.service.deleteCart(cid);
+    const deletedCart = await this.service.deleteCartServices(cid);
     const response = deletedCart;
     const message = "Cart deleted successfully";
     return res.json200(response, message);

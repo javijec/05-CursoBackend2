@@ -6,7 +6,7 @@ const userController = new UserController();
 async function verifyHash(req, res, next) {
   try {
     const { email, password } = req.body;
-    const user = await userController.findByEmail(email);
+    const user = await userController.readUserbyEmailController(email);
     const dbPass = user.password;
     const verify = verifyHashUtil(password, dbPass);
     if (verify) {
