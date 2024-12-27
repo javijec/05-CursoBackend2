@@ -24,10 +24,10 @@ class CartsApiRouter extends CustomRouter {
     this.create("/", ["USER", "ADMIN"], passportCb("online"), createCartController);
     this.read("/", ["ADMIN"], readAllCartController);
     this.read("/:cid", ["USER", "ADMIN"], readCartController);
-    this.create("/:cid/product/:pid", ["USER", "ADMIN"], updateCartOneProductController);
-    this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], addOneProductController);
+    this.update("/:cid/product/:pid", ["USER", "ADMIN"], updateCartOneProductController);
+    this.update("/:cid/product/:pid", ["USER", "ADMIN"], addOneProductController);
     this.update("/:cid", ["USER", "ADMIN"], updateCartManyProductsController);
-    this.update("/:cid/products/:pid", ["USER", "ADMIN"], deleteOneProductController);
+    this.destroy("/:cid/products/:pid", ["USER", "ADMIN"], deleteOneProductController);
     this.destroy("/:cid", ["USER", "ADMIN"], deleteCartController);
   };
 }

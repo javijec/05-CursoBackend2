@@ -4,6 +4,9 @@ const { PERSISTENCE } = process.env;
 
 class ProductDTO {
   constructor(product) {
+    if (!product) {
+      throw new Error("Product data is required");
+    }
     PERSISTENCE !== "mongo" && (this._id = crypto.randomBytes(12).toString("hex"));
     this.title = product.title;
     this.description = product.description;
