@@ -25,10 +25,7 @@ class CartService {
     const updatedCart = await this.repository.updateCartManyProductsRepository(cid, products);
     return updatedCart;
   };
-  addOneProductServices = async (cid, { product, quantity = 1 }) => {
-    const addedCart = await this.repository.addOneProductRepository(cid, { product, quantity });
-    return addedCart;
-  };
+
   deleteOneProductServices = async (cid, pid) => {
     const deletedCart = await this.repository.deleteOneProductRepository(cid, pid);
     return deletedCart;

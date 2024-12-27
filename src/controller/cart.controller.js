@@ -31,8 +31,8 @@ class CartController {
   };
 
   updateCartOneProductController = async (req, res) => {
-    const { cid } = req.params;
-    const { pid, quantity } = req.body;
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
     const updatedCart = await this.service.updateCartOneProductServices(cid, pid, quantity);
     const response = updatedCart;
     const message = "Product quantity updated successfully";
@@ -45,15 +45,6 @@ class CartController {
     const updatedCart = await this.service.updateCartManyProductsServices(cid, products);
     const response = updatedCart;
     const message = "Cart updated successfully";
-    return res.json200(response, message);
-  };
-
-  addOneProductController = async (req, res) => {
-    const { cid } = req.params;
-    const { product, quantity = 1 } = req.body;
-    const addedCart = await this.service.addOneProductServices(cid, { product, quantity });
-    const response = addedCart;
-    const message = "Product added to cart successfully";
     return res.json200(response, message);
   };
 

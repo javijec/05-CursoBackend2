@@ -3,14 +3,7 @@ import UserController from "../../controller/user.controller.js";
 
 const controller = new UserController();
 
-const {
-  createUserController,
-  readUserbyEmailController,
-  readOnebyIdController,
-  readAllUsersController,
-  updateUserController,
-  deleteUserController,
-} = controller;
+const { createUserController, readAllUsersController, updateUserController, deleteUserController } = controller;
 
 class UsersApiRouter extends CustomRouter {
   constructor() {
@@ -18,8 +11,8 @@ class UsersApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", ["USER", "ADMIN"], createUserController);
-    this.read("/", ["PUBLIC", "USER", "ADMIN"], readAllUsersController);
+    this.create("/", ["ADMIN"], createUserController);
+    this.read("/", ["ADMIN"], readAllUsersController);
     this.update("/:id", ["USER", "ADMIN"], updateUserController);
     this.destroy("/:id", ["USER", "ADMIN"], deleteUserController);
   };

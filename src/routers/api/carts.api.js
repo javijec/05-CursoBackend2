@@ -10,7 +10,6 @@ const {
   readCartController,
   updateCartOneProductController,
   updateCartManyProductsController,
-  addOneProductController,
   deleteOneProductController,
   deleteCartController,
 } = controller;
@@ -25,9 +24,8 @@ class CartsApiRouter extends CustomRouter {
     this.read("/", ["ADMIN"], readAllCartController);
     this.read("/:cid", ["USER", "ADMIN"], readCartController);
     this.update("/:cid/product/:pid", ["USER", "ADMIN"], updateCartOneProductController);
-    this.update("/:cid/product/:pid", ["USER", "ADMIN"], addOneProductController);
     this.update("/:cid", ["USER", "ADMIN"], updateCartManyProductsController);
-    this.destroy("/:cid/products/:pid", ["USER", "ADMIN"], deleteOneProductController);
+    this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], deleteOneProductController);
     this.destroy("/:cid", ["USER", "ADMIN"], deleteCartController);
   };
 }

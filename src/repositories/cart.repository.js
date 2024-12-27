@@ -39,10 +39,7 @@ class CartRepository {
     const updatedCart = await this.manager.updateCartManyProducts(cid, products);
     return this.transformCart(updatedCart);
   };
-  addOneProductRepository = async (cid, { product, quantity = 1 }) => {
-    const addedCart = await this.manager.addOneProduct(cid, { product, quantity });
-    return this.transformCart(addedCart);
-  };
+
   deleteOneProductRepository = async (cid, pid) => {
     const deletedCart = await this.manager.deleteOneProduct(cid, pid);
     return this.transformCart(deletedCart);

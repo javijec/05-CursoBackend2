@@ -30,28 +30,25 @@ class CartsManager {
 
   //updateOne
   updateCartOneProduct = async (cid, pid, quantity) => {
-    if (!quantity || isNaN(quantity) || quantity < 0) {
-      throw new Error("Invalid quantity value");
-    }
-    const product = await productModel.findById(pid).lean();
-    if (!product) {
-      throw new Error("Product not found");
-    }
     const cart = await cartModel.findById(cid);
     if (!cart) {
       throw new Error("Cart not found");
     }
 
-    const productIndex = cart.products.findIndex((item) => item.product.toString() === pid);
-    if (productIndex === -1) {
-      throw new Error("Product not found in cart");
+    const productExists = await productModel.findById(pid).lean();
+    if (!productExists) {
+      throw new Error(`Product ${pid} not found in database`);
     }
 
-    const updatedCart = await cartModel.findByIdAndUpdate(
-      cid,
-      { $set: { [`products.${productIndex}.quantity`]: quantity } },
-      { new: true }
-    );
+    const productIndex = cart.products.findIndex((item) => item.product._id.toString() === pid);
+    if (productIndex === -1) {
+      const newProduct = { product: pid, quantity: quantity };
+      cart.products.push(newProduct);
+    } else {
+      cart.products[productIndex].quantity += quantity;
+    }
+
+    const updatedCart = await cartModel.findByIdAndUpdate(cid, { $set: { products: cart.products } }, { new: true });
 
     return updatedCart;
   };
@@ -61,58 +58,30 @@ class CartsManager {
     if (!cart) {
       throw new Error("Cart not found");
     }
-
     if (!Array.isArray(products)) {
       throw new Error("Products must be an array");
     }
 
     for (const item of products) {
-      if (!item.product || !item.quantity) {
-        throw new Error("Invalid product format. Each item must have product and quantity");
-      }
-
-      if (isNaN(item.quantity) || item.quantity < 0) {
-        throw new Error("Invalid quantity value");
+      if (!mongoose.Types.ObjectId.isValid(item.product)) {
+        throw new Error("Invalid product ID format");
       }
 
       const productExists = await productModel.findById(item.product).lean();
       if (!productExists) {
         throw new Error(`Product ${item.product} not found in database`);
       }
+
+      if (!item.quantity) {
+        throw new Error("Each item must have product and quantity");
+      }
+
+      if (isNaN(item.quantity) || item.quantity < 0) {
+        throw new Error("Invalid quantity value");
+      }
     }
 
     const updatedCart = await cartModel.findByIdAndUpdate(cid, { $set: { products: products } }, { new: true });
-
-    return updatedCart;
-  };
-  //addOne
-  addOneProduct = async (cid, { product, quantity = 1 }) => {
-    const productExists = await productModel.findById(product).lean();
-    if (!productExists) {
-      throw new Error("Product not found");
-    }
-
-    const cart = await cartModel.findById(cid);
-    if (!cart) {
-      throw new Error("Cart not found");
-    }
-    const existingProductIndex = cart.products.findIndex((item) => item.product.equals(product));
-
-    let updatedCart;
-
-    if (existingProductIndex === -1) {
-      updatedCart = await cartModel.findByIdAndUpdate(
-        cid,
-        { $push: { products: { product: product, quantity: quantity } } },
-        { new: true }
-      );
-    } else {
-      updatedCart = await cartModel.findByIdAndUpdate(
-        cid,
-        { $inc: { [`products.${existingProductIndex}.quantity`]: quantity } },
-        { new: true }
-      );
-    }
 
     return updatedCart;
   };
