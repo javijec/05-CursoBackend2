@@ -9,7 +9,7 @@ import crypto from "crypto";
 import UserService from "../services/user.services.js";
 
 const userService = new UserService();
-
+//register
 passport.use(
   "register",
   new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, email, password, done) => {
@@ -35,7 +35,7 @@ passport.use(
     }
   })
 );
-
+//login
 passport.use(
   "login",
   new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
@@ -45,17 +45,21 @@ passport.use(
         const info = { message: "USER NOT FOUND", statusCode: 401 };
         return done(null, false, info);
       }
+      if (!user.verify) {
+        const info = { message: "USER NOT VERIFIED", statusCode: 401 };
+        return done(null, false, info);
+      }
       const passwordForm = password;
       const passwordDb = user.password;
-      const verify = verifyHashUtil(passwordForm, passwordDb);
-      if (!verify) {
+      const verifyHash = verifyHashUtil(passwordForm, passwordDb);
+      if (!verifyHash) {
         const info = { message: "INVALID CREDENTIALS", statusCode: 401 };
         return done(null, false, info);
       }
-      const data = { user_id: user._id, role: user.role };
+      const data = { user_id: user.id, role: user.role };
       const token = createTokenUtil(data);
       user.token = token;
-      const update = await userService.updateUserServices(user._id, { isOnline: true });
+      await userService.updateUserServices(user.id, { isOnline: true });
       return done(null, user);
     } catch (error) {
       return done(error);
@@ -63,24 +67,7 @@ passport.use(
   })
 );
 
-passport.use(
-  "admin",
-  new JwtStrategy(
-    { jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]), secretOrKey: process.env.SECRET_KEY },
-    async (data, done) => {
-      try {
-        const { user_id, role } = data;
-        if (role !== "ADMIN") {
-          const info = { message: "NOT AUTHORIZED", statusCode: 403 };
-          return done(null, false, info);
-        }
-        const user = await userService.readOnebyIdServices(user_id);
-        return done(null, user);
-      } catch (error) {}
-    }
-  )
-);
-
+//online
 passport.use(
   "online",
   new JwtStrategy(
@@ -104,7 +91,7 @@ passport.use(
     }
   )
 );
-
+//signout
 passport.use(
   "signout",
   new JwtStrategy(
@@ -113,7 +100,7 @@ passport.use(
       try {
         const { user_id } = data;
         const user = await userService.readOnebyIdServices(user_id);
-        await userService.updateUserController(user_id, { isOnline: false });
+        await userService.updateUserServices(user_id, { isOnline: false });
         user.token = createTokenUtil({ user_id: null });
         return done(null, user);
       } catch (error) {

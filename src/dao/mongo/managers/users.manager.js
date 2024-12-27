@@ -29,7 +29,10 @@ class UsersManager {
   //updateOne
   updateUser = async (id, data) => {
     const options = { new: true };
+    console.log(id);
+    console.log(data);
     const user = await UserModel.findByIdAndUpdate(id, data, options);
+
     if (!user) {
       throw new Error("Failed to update user");
     }

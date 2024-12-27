@@ -1,11 +1,14 @@
 import CartService from "../services/cart.services.js";
+import { verifyTokenUtil } from "../utils/token.util.js";
 
 class CartController {
   constructor() {
     this.service = new CartService();
   }
   createCartController = async (req, res) => {
-    const { user_id } = req.user._id;
+    const token = req?.cookies?.token;
+    const data = verifyTokenUtil(token);
+    const { user_id } = data;
     const newCart = await this.service.createCartServices(user_id);
     const response = newCart;
     const message = "Cart created successfully";

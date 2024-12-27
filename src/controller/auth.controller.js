@@ -17,6 +17,7 @@ class authController {
   };
   signoutController = async (req, res) => {
     const message = "User logged out successfully";
+    const response = "OK";
     return res.cookie("token", req.user.token, { maxAge: 1 }).json200(response, message);
   };
   onlineController = async (req, res) => {
@@ -24,8 +25,26 @@ class authController {
     return res.json200("OK", message);
   };
   veryfyController = async (req, res) => {
-    const { verifyCodeFromClient } = req.body;
-    const response = await this.services.veryfyService(email, verifyCodeFromClient);
+    const { email, verifyCode } = req.body;
+    const response = await this.services.veryfyService(email, verifyCode);
+    if (response) {
+      return res.json200("OK", response);
+    } else {
+      return res.json401();
+    }
+  };
+  resetPasswordController = async (req, res) => {
+    const { email } = req.body;
+    const response = await this.services.resetPasswordService(email);
+    if (response) {
+      return res.json200("OK", response);
+    } else {
+      return res.json401();
+    }
+  };
+  newPasswordController = async (req, res) => {
+    const { email, verifycode, password } = req.body;
+    const response = await this.services.newPasswordService(email, verifycode, password);
     if (response) {
       return res.json200("OK", response);
     } else {

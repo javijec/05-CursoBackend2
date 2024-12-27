@@ -4,7 +4,15 @@ import AuthController from "../../controller/auth.controller.js";
 
 const authcontroller = new AuthController();
 
-const { registerController, loginController, signoutController, onlineController, veryfyController } = authcontroller;
+const {
+  registerController,
+  loginController,
+  signoutController,
+  onlineController,
+  veryfyController,
+  resetPasswordController,
+  newPasswordController,
+} = authcontroller;
 
 class AuthApiRouter extends CustomRouter {
   constructor() {
@@ -16,7 +24,9 @@ class AuthApiRouter extends CustomRouter {
     this.create("/login", ["PUBLIC"], passportCb("login"), loginController);
     this.create("/signout", ["USER", "ADMIN"], passportCb("signout"), signoutController);
     this.create("/online", ["USER", "ADMIN"], passportCb("online"), onlineController);
-    this.create("/veriry", ["PUBLIC"], veryfyController);
+    this.create("/verify", ["PUBLIC"], veryfyController);
+    this.create("/resetpassword", ["PUBLIC"], resetPasswordController);
+    this.create("/newpassword", ["PUBLIC"], newPasswordController);
   };
 }
 

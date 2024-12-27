@@ -36,3 +36,9 @@ server.use("/", express.static(`./src/public`));
 server.use(indexRouter);
 server.use(errorHandler);
 server.use(pathHandler);
+
+process.on("SIGINT", () => {
+  server.close(() => {
+    console.log("Process terminated");
+  });
+});

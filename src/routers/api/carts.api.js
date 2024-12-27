@@ -22,7 +22,7 @@ class CartsApiRouter extends CustomRouter {
   }
   init = () => {
     this.create("/", ["USER", "ADMIN"], passportCb("online"), createCartController);
-    this.read("/", ["ADMIN"], passportCb("admin"), readAllCartController);
+    this.read("/", ["ADMIN"], readAllCartController);
     this.read("/:cid", ["USER", "ADMIN"], readCartController);
     this.create("/:cid/product/:pid", ["USER", "ADMIN"], updateCartOneProductController);
     this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], addOneProductController);

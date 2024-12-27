@@ -9,7 +9,6 @@ class UserService {
     return newUser;
   };
   readUserbyEmailServices = async (email) => {
-    console.log("service");
     const user = await this.repository.readUserbyEmailRepository(email);
     return user;
   };

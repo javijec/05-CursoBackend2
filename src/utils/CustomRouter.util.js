@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { verifyTokenUtil } from "./token.util.js";
-import UsersController from "../controller/user.controller.js";
+import UserService from "../services/user.services.js";
 
-const userController = new UsersController();
+const userService = new UserService();
 
 class CustomRouter {
   constructor() {
@@ -39,8 +39,9 @@ class CustomRouter {
       const { role, user_id } = data;
       if (!role || !user_id) return res.json401();
       if ((policies.includes("USER") && role === "USER") || (policies.includes("ADMIN") && role === "ADMIN")) {
-        const user = await userController.readOnebyIdController(user_id);
+        const user = await userService.readOnebyIdServices(user_id);
         if (!user) return res.json401();
+        if (!user.verify) return res.status(401).json({ error: "USER NOT VERIFIED" });
         req.user = user;
         return next();
       }

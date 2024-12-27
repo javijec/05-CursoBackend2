@@ -6,40 +6,50 @@ const { CartManager } = dao;
 class CartRepository {
   constructor() {
     this.manager = new CartManager();
-    this.dto = CartDTO;
   }
+
+  transformCart(cartData) {
+    if (!cartData) return null;
+    return new CartDTO(cartData);
+  }
+
+  transformCarts(carts) {
+    if (!carts || !Array.isArray(carts)) return [];
+    return carts.map((cart) => this.transformCart(cart));
+  }
+
   createCartRepository = async (user_id) => {
     const newCart = await this.manager.createCart(user_id);
-    return new this.dto(newCart);
+    return this.transformCart(newCart);
   };
   readAllCartRepository = async () => {
     const carts = await this.manager.readAllCart();
-    return carts.map((cart) => new this.dto(cart));
+    return this.transformCarts(carts);
   };
 
   readCartRepository = async (cid) => {
     const cart = await this.manager.readCart(cid);
-    return new this.dto(cart);
+    return this.transformCart(cart);
   };
   updateCartOneProductRepository = async (cid, pid, quantity) => {
     const updatedCart = await this.manager.updateCartOneProduct(cid, pid, quantity);
-    return new this.dto(updatedCart);
+    return this.transformCart(updatedCart);
   };
   updateCartManyProductsRepository = async (cid, products) => {
     const updatedCart = await this.manager.updateCartManyProducts(cid, products);
-    return new this.dto(updatedCart);
+    return this.transformCart(updatedCart);
   };
   addOneProductRepository = async (cid, { product, quantity = 1 }) => {
     const addedCart = await this.manager.addOneProduct(cid, { product, quantity });
-    return new this.dto(addedCart);
+    return this.transformCart(addedCart);
   };
   deleteOneProductRepository = async (cid, pid) => {
     const deletedCart = await this.manager.deleteOneProduct(cid, pid);
-    return new this.dto(deletedCart);
+    return this.transformCart(deletedCart);
   };
   deleteCartRepository = async (cid) => {
     const deletedCart = await this.manager.deleteCart(cid);
-    return new this.dto(deletedCart);
+    return this.transformCart(deletedCart);
   };
 }
 
