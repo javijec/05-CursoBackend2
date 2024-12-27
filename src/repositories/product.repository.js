@@ -17,11 +17,11 @@ class ProductRepository {
     if (!products || !Array.isArray(products)) return [];
     return products.map((product) => this.transformProduct(product));
   }
-
   readAllProductspaginatedRepository = async (limit = 10, page = 1, category, stock, sort) => {
     const products = await this.manager.readAllProductspaginated(limit, page, category, stock, sort);
-    return this.transformProducts(products);
+    return products;
   };
+
   readProductRepository = async (pid) => {
     const product = await this.manager.readProduct(pid);
     return this.transformProduct(product);

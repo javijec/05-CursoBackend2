@@ -188,9 +188,10 @@
       // Async function to load and render products
       async function initializePage() {
         try {
-          const response = await fetch("/api/products");
+          const response = await fetch("/api/products/");
           const data = await response.json();
           const products = data.data.docs;
+          console.log(products);
 
           renderProducts(products);
         } catch (error) {

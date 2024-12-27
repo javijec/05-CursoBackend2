@@ -3,8 +3,14 @@ import ProductController from "../../controller/products.controller.js";
 
 const controller = new ProductController();
 
-const { readAllController, readOneController, createOneController, updateOneController, deleteOneController } =
-  controller;
+const {
+  readAllController,
+  readOneController,
+  createOneController,
+  updateOneController,
+  deleteOneController,
+  ReadAllpaginatedController,
+} = controller;
 
 class ProductsApiRouter extends CustomRouter {
   constructor() {
@@ -13,6 +19,7 @@ class ProductsApiRouter extends CustomRouter {
   }
   init = () => {
     this.read("/", ["PUBLIC", "USER", "ADMIN"], readAllController);
+    this.read("/paginated", ["PUBLIC", "USER", "ADMIN"], ReadAllpaginatedController);
     this.read("/:pid", ["USER", "ADMIN"], readOneController);
     this.create("/", ["ADMIN"], createOneController);
     this.update("/:pid", ["ADMIN"], updateOneController);
