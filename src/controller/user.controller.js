@@ -11,28 +11,7 @@ class UserController {
     const message = "User created successfully";
     return res.json201(response, message);
   };
-  readUserbyEmailController = async (req, res) => {
-    const email = req.params.email;
-    const user = await this.service.readUserbyEmailServices(email);
-    const response = user;
-    const message = "User retrieved successfully";
-    if (response) {
-      return res.json200(response, message);
-    } else {
-      return res.json404();
-    }
-  };
-  readOnebyIdController = async (req, res) => {
-    const id = req.params.id;
-    const user = await this.service.readOnebyIdServices(id);
-    const response = user;
-    const message = "User retrieved successfully";
-    if (response) {
-      return res.json200(response, message);
-    } else {
-      return res.json404();
-    }
-  };
+
   readAllUsersController = async (req, res) => {
     const users = await this.service.readAllUsersServices();
     const response = users;

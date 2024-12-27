@@ -1,22 +1,30 @@
-import crypto from "crypto";
-
-const { PERSISTENCE } = process.env;
-
 class UserDTO {
   constructor(user) {
     if (!user) {
       throw new Error("User data is required");
     }
-    PERSISTENCE !== "mongo" && (this._id = crypto.randomBytes(12).toString("hex"));
+
+    // Map only the data transformation logic
+    this.id = user._id?.toString() || user.id; // Handle both Mongo ObjectId and regular id
     this.email = user.email;
-    this.password = user.password;
-    this.role = user.role;
-    this.photo = user.photo;
-    this.isOnline = user.isOnline;
-    this.verifyCode = user.verifyCode;
-    this.verify = user.verify;
-    PERSISTENCE !== "mongo" && (this.createdAt = new Date());
-    PERSISTENCE !== "mongo" && (this.updatedAt = new Date());
+    this.role = user.role || "USER";
+    this.photo = user.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+    this.isOnline = user.isOnline || false;
+    this.verify = user.verify || false;
+
+    // Only include sensitive fields if they exist
+    if (user.password) this.password = user.password;
+    if (user.verifyCode) this.verifyCode = user.verifyCode;
+
+    // Preserve timestamps if existen
+    if (user.createdAt) this.createdAt = user.createdAt;
+    if (user.updatedAt) this.updatedAt = user.updatedAt;
+  }
+
+  toJSON() {
+    // Exclude sensitive data when converting to JSON
+    const { password, verifyCode, ...publicData } = this;
+    return publicData;
   }
 }
 

@@ -6,35 +6,47 @@ const { UsersManager } = dao;
 class UserRepository {
   constructor() {
     this.manager = new UsersManager();
-    this.dto = UserDTO;
   }
-  createUserRepository = async (user) => {
-    const newUser = await this.manager.createUser(user);
-    return new this.dto(newUser);
-  };
-  readUserbyEmailRepository = async (email) => {
-    console.log("repository");
 
+  transformUser(userData) {
+    if (!userData) return null;
+    return new UserDTO(userData);
+  }
+
+  transformUsers(users) {
+    if (!users || !Array.isArray(users)) return [];
+    return users.map((user) => this.transformUser(user));
+  }
+
+  async createUserRepository(user) {
+    const newUser = await this.manager.createUser(user);
+    return this.transformUser(newUser);
+  }
+
+  async readUserbyEmailRepository(email) {
     const user = await this.manager.readUserbyEmail(email);
-    return new this.dto(user);
-  };
-  readOnebyIdRepository = async (id) => {
-    const user = await this.manager.readOnebyId(id);
-    return new this.dto(user);
-  };
-  readAllUsersRepository = async () => {
+    return this.transformUser(user);
+  }
+
+  async readOnebyIdRepository(id) {
+    const user = await this.manager.readUserbyId(id);
+    return this.transformUser(user);
+  }
+
+  async readAllUsersRepository() {
     const users = await this.manager.readAllUsers();
-    console.log(users);
-    return users.map((user) => new this.dto(user));
-  };
-  updateUserRepository = async (id, data) => {
+    return this.transformUsers(users);
+  }
+
+  async updateUserRepository(id, data) {
     const updatedUser = await this.manager.updateUser(id, data);
-    return new this.dto(updatedUser);
-  };
-  deleteUserRepository = async (id) => {
+    return this.transformUser(updatedUser);
+  }
+
+  async deleteUserRepository(id) {
     const deletedUser = await this.manager.deleteUser(id);
-    return new this.dto(deletedUser);
-  };
+    return this.transformUser(deletedUser);
+  }
 }
 
 export default UserRepository;
