@@ -1,4 +1,3 @@
-import { console } from "inspector";
 import ProductService from "../services/product.services.js";
 
 class ProductController {
