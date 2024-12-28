@@ -22,13 +22,15 @@ class authController {
   };
   onlineController = async (req, res) => {
     const message = "User is online";
-    return res.json200("OK", message);
+    const { email } = req.user;
+    const response = email;
+    return res.json200(response, message);
   };
   veryfyController = async (req, res) => {
     const { email, verifyCode } = req.body;
     const response = await this.services.veryfyService(email, verifyCode);
     if (response) {
-      return res.json200("OK", response);
+      return res.json200(response, "OK");
     } else {
       return res.json401();
     }

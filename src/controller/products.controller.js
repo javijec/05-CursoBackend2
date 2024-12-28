@@ -8,7 +8,6 @@ class ProductController {
   ReadAllpaginatedController = async (req, res) => {
     const { limit, page, category, stock, sort } = req.query;
     const products = await this.service.readAllProductspaginatedServices(limit, page, category, stock, sort);
-    console.log(products);
     const response = products;
     const message = "Products retrieved successfully";
     return res.json200(response, message);
