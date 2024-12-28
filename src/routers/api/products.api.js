@@ -18,9 +18,9 @@ class ProductsApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.read("/", ["PUBLIC", "USER", "ADMIN"], readAllController);
-    this.read("/paginated", ["PUBLIC", "USER", "ADMIN"], ReadAllpaginatedController);
-    this.read("/:pid", ["USER", "ADMIN"], readOneController);
+    this.read("/", ["PUBLIC"], readAllController);
+    this.read("/paginated", ["PUBLIC"], ReadAllpaginatedController);
+    this.read("/:pid", ["PUBLIC"], readOneController);
     this.create("/", ["ADMIN"], createOneController);
     this.update("/:pid", ["ADMIN"], updateOneController);
     this.destroy("/:pid", ["ADMIN"], deleteOneController);

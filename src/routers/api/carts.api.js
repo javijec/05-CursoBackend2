@@ -12,6 +12,7 @@ const {
   updateCartManyProductsController,
   deleteOneProductController,
   deleteCartController,
+  purchaseCartController,
 } = controller;
 
 class CartsApiRouter extends CustomRouter {
@@ -27,6 +28,7 @@ class CartsApiRouter extends CustomRouter {
     this.update("/:cid", ["USER", "ADMIN"], updateCartManyProductsController);
     this.destroy("/:cid/product/:pid", ["USER", "ADMIN"], deleteOneProductController);
     this.destroy("/:cid", ["USER", "ADMIN"], deleteCartController);
+    this.create("/:cid/purchase", ["USER", "ADMIN"], purchaseCartController);
   };
 }
 const cartsApiRouter = new CartsApiRouter();

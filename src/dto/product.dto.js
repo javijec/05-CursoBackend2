@@ -1,13 +1,9 @@
-import crypto from "crypto";
-
-const { PERSISTENCE } = process.env;
-
 class ProductDTO {
   constructor(product) {
     if (!product) {
       throw new Error("Product data is required");
     }
-    PERSISTENCE !== "mongo" && (this._id = crypto.randomBytes(12).toString("hex"));
+    this.id = product._id?.toString() || product.id; // Handle both Mongo ObjectId and regular id
     this.title = product.title;
     this.description = product.description;
     this.code = product.code;

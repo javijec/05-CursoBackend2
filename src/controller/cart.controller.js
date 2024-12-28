@@ -63,6 +63,20 @@ class CartController {
     const message = "Cart deleted successfully";
     return res.json200(response, message);
   };
+
+  purchaseCartController = async (req, res) => {
+    const { cid } = req.params;
+    const token = req?.cookies?.token;
+    const data = verifyTokenUtil(token);
+    const { user_id } = data;
+
+    try {
+      const result = await this.service.purchaseCartServices(cid, user_id);
+      return res.json200(result, "Purchase completed successfully");
+    } catch (error) {
+      return res.json400(error.message);
+    }
+  };
 }
 
 export default CartController;

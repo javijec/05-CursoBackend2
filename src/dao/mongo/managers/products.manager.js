@@ -32,7 +32,7 @@ class ProductManager {
   readProduct = async (pid) => {
     const product = await productModel.findById(pid).lean();
     if (!product) {
-      throw new Error("Product not found");
+      throw new Error("Product not found READ");
     }
     return product;
   };
@@ -56,7 +56,7 @@ class ProductManager {
 
     const existingProduct = await productModel.findById(pid);
     if (!existingProduct) {
-      throw new Error("Product not found");
+      throw new Error("Product not found UPDATE");
     }
 
     const updatedProduct = await productModel.findByIdAndUpdate(pid, product, { new: true });
