@@ -3,16 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Catálogo de Productos</title>
+    <title>Carrito de Compras</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <div id="loading-overlay">
-      <p>Cargando...</p>
-    </div>
-
     <nav>
       <div class="container">
         <a href="index.html">Inicio</a>
@@ -26,14 +22,14 @@
     </nav>
 
     <div class="container">
-      <h1>Catálogo de Productos</h1>
-
-      <div id="productGrid">
-        <!-- Los productos se insertarán dinámicamente aquí -->
+      <h1>Carrito de Compras</h1>
+      <div id="cartItems">
+        <!-- Los productos del carrito se insertarán dinámicamente aquí -->
       </div>
+      <button id="checkoutButton" style="display: none">Finalizar Compra</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./js/index.js"></script>
+    <script src="./js/cart.js"></script>
   </body>
 </html>
